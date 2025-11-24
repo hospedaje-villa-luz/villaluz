@@ -238,8 +238,7 @@
 <script src="panel-cupones.js"></script>
 
 <script>
-function renderCuponesEnPagina() {
-    const cupones = JSON.parse(localStorage.getItem("cupones")) || [];
+function renderCuponesEnPagina(cupones) {
     const contenedor = document.getElementById("cupones");
 
     let html = `
@@ -248,7 +247,6 @@ function renderCuponesEnPagina() {
     `;
 
     cupones.forEach((c, i) => {
-        // Usa la descripción del objeto, reemplazando \n por <li>
         const listaItems = c.descripcion.split('\n').map(item => `<li>${item}</li>`).join('');
 
         html += `
@@ -270,14 +268,19 @@ function renderCuponesEnPagina() {
         </p>
     `;
 
-    if (contenedor) {
-        contenedor.innerHTML = html;
-    }
+    contenedor.innerHTML = html;
 }
 
-// Llama a la función una sola vez cuando el DOM esté listo.
-document.addEventListener("DOMContentLoaded", renderCuponesEnPagina);
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("cupones.json?v=1")
+        .then(r => r.json())
+        .then(cupones => {
+            renderCuponesEnPagina(cupones);
+        })
+        .catch(err => {
+            console.error("❌ Error cargando cupones.json:", err);
+        });
+});
 </script>
-
 </body>
 </html>

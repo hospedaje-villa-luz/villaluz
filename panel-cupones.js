@@ -92,3 +92,16 @@ function guardarEdicion() {
 }
 
 cargarCupones();
+
+function descargarJSON() {
+    const data = JSON.stringify(cupones, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cupones.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
